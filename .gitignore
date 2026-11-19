@@ -1,0 +1,83 @@
+/literature survey papers
+
+# ==========================================
+# PYTHON
+# ==========================================
+
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python environment variables
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# DATASETS - DO NOT UPLOAD
+# ==========================================
+
+model_engine/data/
+**/LEVIR-CD/
+**/LEVIR_CD/
+**/datasets/
+**/dataset/
+
+# ==========================================
+# MODEL OUTPUTS - DO NOT UPLOAD
+# ==========================================
+
+model_engine/outputs/
+**/outputs/
+**/runs/
+**/logs/
+*.log
+
+# ==========================================
+# MODEL CHECKPOINTS / WEIGHTS
+# ==========================================
+
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.safetensors
+*.h5
+*.keras
+*.weights
+
+# ==========================================
+# FRONTEND
+# ==========================================
+
+node_modules/
+dist/
+.vite/
+coverage/
+
+# ==========================================
+# EDITORS
+# ==========================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==========================================
+# OS FILES
+# ==========================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
