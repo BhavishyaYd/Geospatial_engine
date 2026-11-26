@@ -681,17 +681,6 @@ decisions.
 
 ---
 
-## Author
-
-<div align="center">
-
-**Aryan Sengar**
-
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/aryansengar007)
-[![Portfolio](https://img.shields.io/badge/Portfolio-1D4ED8?style=flat-square&logo=netlify&logoColor=white)](https://aryan-sengar-portfolio-v2.netlify.app)
-
----
-
 **Geospatial Investigation Engine (GEI)**<br/>
 AI-assisted change detection, region analysis, and geospatial investigation.
 
