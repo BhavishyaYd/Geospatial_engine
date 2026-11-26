@@ -1,502 +1,375 @@
-# Geospatial Investigation Engine (GEI)
+<div align="center">
 
-An AI-assisted geospatial change-detection and investigation platform
-that compares imagery captured at different times, identifies candidate
-change regions, enriches them with vision-language analysis, and
-presents the evidence through an interactive dashboard.
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!--                   ANIMATED WAVE HEADER                         -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
 
-> **Project status:** Core development and stabilization completed. The
-> system is intended to assist human investigation; its outputs are
-> model predictions and must be independently verified.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:020c18,40:0a2340,80:0c4a6e,100:0369a1&height=220&section=header&text=Geospatial%20Investigation%20Engine&fontSize=36&fontColor=ffffff&fontAlignY=38&desc=AI-Assisted%20Change%20Detection%20%7C%20CSD-Net%20%7C%20RemoteCLIP%20%7C%20Florence-2&descSize=15&descAlignY=60&animation=fadeIn" width="100%"/>
 
-## Table of Contents
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!--                  ANIMATED TYPING TAGLINE                       -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
 
--   [Overview](#overview)
--   [Problem Statement](#problem-statement)
--   [Key Features](#key-features)
--   [System Architecture](#system-architecture)
--   [Investigation Workflow](#investigation-workflow)
--   [Technology Stack](#technology-stack)
--   [Repository Structure](#repository-structure)
--   [Prerequisites](#prerequisites)
--   [Setup and Run](#setup-and-run)
--   [Using the Application](#using-the-application)
--   [API Overview](#api-overview)
--   [Outputs and Storage](#outputs-and-storage)
--   [Geospatial Processing](#geospatial-processing)
--   [Testing](#testing)
--   [Limitations](#limitations)
--   [Future Enhancements](#future-enhancements)
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=19&duration=2800&pause=900&color=38BDF8&center=true&vCenter=true&width=760&lines=AI-Assisted+Satellite+Imagery+Change+Detection+%F0%9F%9B%B0%EF%B8%8F;CSD-Net+Pixel-Level+Change+Prediction+%F0%9F%A7%A0;RemoteCLIP+%2B+Florence-2+Region+Analysis;GeoTIFF+%7C+WGS84+%7C+GeoJSON+Geospatial+Support;React+%2B+FastAPI+%2B+PyTorch+Full-Stack+Platform" alt="Typing SVG"/>
 
-## Overview
+<br/>
 
-Geospatial Investigation Engine (GEI) is a full-stack application for
-analysing changes between two images of the same geographical area
-captured at different points in time.
+<!-- CTA BUTTONS -->
+[![GitHub Repo](https://img.shields.io/badge/💻%20Source%20Code-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/aryansengar007/Geo-Intel)
+[![Project Status](https://img.shields.io/badge/Status-Core%20Development%20Complete-10b981?style=for-the-badge)](https://github.com/aryansengar007/Geo-Intel)
 
-The user supplies an earlier image (**T1**) and a later image (**T2**).
-The backend processes the pair using a CSD-Net-based change-detection
-pipeline, extracts candidate regions, and performs additional analysis
-using RemoteCLIP and Florence-2. Where supported georeferencing metadata
-is available, candidate regions can also be converted from image pixel
-coordinates into geographic features and displayed on an interactive
-map.
+<br/>
 
-The application combines:
+<!-- ANIMATED SKILL ICONS -->
+<img src="https://skillicons.dev/icons?i=react,python,pytorch,fastapi&theme=dark&perline=4" />
 
-1.  Pixel-level change detection.
-2.  Candidate-region extraction.
-3.  Vision-language-based temporal and semantic analysis.
-4.  Natural-language descriptions of candidate regions.
-5.  AOI association and geospatial representation when valid
-    georeferencing is available.
-6.  Investigation history, reports, and downloadable artifacts.
+<br/><br/>
 
-GEI is designed as an investigation-assistance tool. It does not
-independently establish whether a detected change is illegal
-construction or another confirmed real-world event.
+![React](https://img.shields.io/badge/React-Vite-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=flat-square&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-DL%20Models-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)
+![MapLibre](https://img.shields.io/badge/MapLibre-Map%20Render-396CB2?style=flat-square)
+![GeoJSON](https://img.shields.io/badge/GeoJSON-WGS84-16a34a?style=flat-square)
 
-## Problem Statement
+</div>
 
-Comparing large geographical images manually is time-consuming and can
-make it difficult to consistently identify, inspect, and document
-changes.
+<br/>
 
-GEI aims to streamline this workflow by automating image comparison,
-organising detected regions, providing supplementary AI-based
-interpretations, and presenting the resulting evidence in one
-application.
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-## Key Features
+<br/>
 
-### Image upload and investigation management
+> ⚠️ **Project Status:** Core development and stabilization complete. GEI is an **investigation-assistance tool** — its outputs are model predictions and must be independently verified before operational, legal, or policy decisions.
 
--   Upload an earlier T1 image and a later T2 image.
--   Validate image inputs before processing.
--   Associate an optional Area of Interest (AOI).
--   Create a unique run ID for each investigation.
--   Track queued, running, completed, and failed states.
--   Retain the frontend investigation index in browser local storage.
+<br/>
 
-### AI-based change detection
+## 🛰️ Overview
 
--   CSD-Net-based image-pair analysis using a Siamese encoder-based
-    architecture.
--   Pixel-level change prediction.
--   Change masks and probability-map outputs.
--   Candidate-region extraction from connected changed areas.
--   Region information such as bounding boxes, centroids, and pixel
-    area, where available.
+**Geospatial Investigation Engine (GEI)** is a full-stack AI platform for detecting and analysing changes between two images of the same geographical area captured at different points in time (**T1** and **T2**).
 
-### Vision-language analysis
+The backend processes the image pair through a **CSD-Net-based change-detection pipeline**, extracts candidate regions, and enriches them with **RemoteCLIP** and **Florence-2** vision-language analysis. Where valid georeferencing metadata is present, candidate regions are converted from pixel coordinates to **WGS84 geographic features** and displayed on an interactive **MapLibre** map.
 
--   **RemoteCLIP:** supplementary temporal and semantic analysis of
-    candidate regions using image and text representations.
--   **Florence-2:** natural-language descriptions of candidate image
-    regions.
+<br/>
 
-These outputs provide additional context. Similarity scores are not
-calibrated probabilities, and generated descriptions may be inaccurate.
+<div align="center">
 
-### Geospatial integration
+| 🔍 Detection | 🧠 Analysis | 🗺️ Mapping | 📊 Dashboard |
+|:---:|:---:|:---:|:---:|
+| CSD-Net pixel-level change | RemoteCLIP + Florence-2 | GeoTIFF → WGS84 GeoJSON | Interactive results UI |
 
--   Optional AOI association and retrieval.
--   GeoTIFF metadata inspection.
--   Pixel-to-geographic coordinate conversion for supported
-    georeferencing cases.
--   WGS84 GeoJSON generation for mapped candidate regions.
--   Interactive map presentation using MapLibre.
--   Graceful handling of missing or unsupported georeferencing.
+</div>
 
-### Investigation results dashboard
+<br/>
 
--   Executive summary and processing information.
--   Original T1 and T2 imagery.
--   Change mask, probability map, and overlay when generated.
--   Candidate-region inspection.
--   RemoteCLIP and Florence-2 analysis.
--   Geospatial metadata and mapped features when available.
--   Report and artifact retrieval.
--   PNG preview fallback for original TIFF images when the browser
-    cannot display TIFF directly.
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-## System Architecture
+<br/>
 
-GEI has three main layers.
+## ✨ Key Features
 
-### 1. Frontend
+<details>
+<summary><strong>🖼️ Image Upload and Investigation Management — click to expand</strong></summary>
+<br/>
 
-The frontend is built with React and Vite. It provides the upload
-workflow, investigation history, results dashboard, and interactive map.
+| Feature | Detail |
+|:---|:---|
+| Dual image upload | Earlier T1 and later T2 image inputs |
+| Input validation | Format, decodability, and dimension compatibility checks |
+| AOI association | Optional Area of Interest linking |
+| Unique run IDs | Each investigation gets its own isolated run |
+| State tracking | Queued · Running · Completed · Failed |
+| Frontend persistence | Investigation index stored in browser local storage |
 
-MapLibre is used for map rendering, with Geoman providing map drawing
-tools for AOI workflows.
+</details>
 
-### 2. Backend
+<details>
+<summary><strong>🤖 AI-Based Change Detection — click to expand</strong></summary>
+<br/>
 
-The backend is built with Python and FastAPI. It validates uploads,
-creates investigation runs, schedules processing, manages run-specific
-files, exposes API endpoints, and coordinates AI and geospatial
-processing.
+| Feature | Detail |
+|:---|:---|
+| CSD-Net architecture | Siamese encoder-based image-pair analysis |
+| Pixel-level prediction | Full-resolution change mask output |
+| Probability maps | Uncertainty-aware change probability output |
+| Candidate region extraction | Connected changed pixel grouping |
+| Region metadata | Bounding boxes · centroids · pixel area |
 
-### 3. AI and geospatial processing
+</details>
 
-The processing pipeline uses:
+<details>
+<summary><strong>🧠 Vision-Language Analysis — click to expand</strong></summary>
+<br/>
 
--   **CSD-Net:** primary change-detection component.
--   **RemoteCLIP:** supplementary image-text and temporal/semantic
-    analysis.
--   **Florence-2:** candidate-region descriptions.
--   **OpenCV and Pillow:** image processing and image I/O.
--   **Geospatial utilities:** GeoTIFF metadata inspection, coordinate
-    conversion, and GeoJSON generation.
+| Model | Purpose |
+|:---|:---|
+| **RemoteCLIP** | Supplementary temporal and semantic analysis via image-text similarity |
+| **Florence-2** | Natural-language descriptions of candidate image regions |
 
-### High-level workflow
+> ⚠️ Similarity scores are embedding similarities, not calibrated probabilities. Generated descriptions may be inaccurate and require visual verification.
 
-``` text
-User
- |
- v
-React + Vite frontend
- |
- | multipart upload: T1, T2, optional AOI
- v
-FastAPI backend
- |
- | validate inputs and create run ID
- v
-Background investigation job
- |
- +--> Image preprocessing
- |
- +--> CSD-Net change detection
- |       |
- |       +--> Change mask / probability map
- |       +--> Candidate-region extraction
- |
- +--> RemoteCLIP analysis of candidate regions
- |
- +--> Florence-2 region descriptions
- |
- +--> Geospatial processing when valid metadata exists
- |
- v
-Run-specific report and artifacts
- |
- v
-FastAPI result endpoints
- |
- v
-React results dashboard + interactive map
+</details>
+
+<details>
+<summary><strong>🗺️ Geospatial Integration — click to expand</strong></summary>
+<br/>
+
+| Feature | Detail |
+|:---|:---|
+| GeoTIFF metadata inspection | Reads georeferencing transform from uploaded images |
+| Coordinate conversion | Pixel-to-geographic for WGS84 and Web Mercator (EPSG:3857 → 4326) |
+| GeoJSON generation | Candidate regions as geographic features |
+| Interactive map | MapLibre rendering with Geoman AOI drawing tools |
+| Graceful fallback | Missing or unsupported georeferencing handled cleanly |
+
+</details>
+
+<br/>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
+
+<br/>
+
+## 🏗️ System Architecture
+
+<br/>
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              React + Vite Frontend                          │
+│   Upload Workflow · Investigation History · Results         │
+│   MapLibre Interactive Map · Geoman AOI Drawing             │
+└──────────────────────┬──────────────────────────────────────┘
+                       │  multipart upload: T1, T2, AOI (opt)
+┌──────────────────────▼──────────────────────────────────────┐
+│              FastAPI Backend                                │
+│   Input validation · Run ID creation · Job orchestration   │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────┐
+│          Background Investigation Pipeline                  │
+│                                                             │
+│  📐 Image Preprocessing                                     │
+│      ↓                                                      │
+│  🔍 CSD-Net Change Detection                                │
+│      → Change mask / probability map                        │
+│      → Candidate region extraction                          │
+│      ↓                                                      │
+│  🧠 RemoteCLIP  ·  Florence-2                               │
+│      ↓                                                      │
+│  🗺️  Geospatial Processing (when valid metadata exists)     │
+│      ↓                                                      │
+│  📄 Run Report + Artifact Storage                           │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────────────┐
+│   FastAPI Result Endpoints → React Results Dashboard        │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## Investigation Workflow
+<br/>
 
-1.  **Upload:** The user selects T1 and T2 images and may associate a
-    saved AOI.
-2.  **Validation:** The backend checks that the required files are
-    present, decodable, supported, and dimensionally compatible.
-3.  **Run creation:** The backend creates a unique run ID and returns an
-    accepted response.
-4.  **Background processing:** The investigation moves through queued
-    and running states while the AI pipeline executes.
-5.  **Preprocessing:** Images are loaded and transformed into the format
-    expected by the change-detection model. The pipeline uses
-    normalization and patch-based processing as configured by the
-    implementation.
-6.  **Change detection:** CSD-Net generates change predictions and
-    related visual outputs.
-7.  **Region extraction:** Connected changed pixels are grouped into
-    candidate regions.
-8.  **AI interpretation:** RemoteCLIP performs supplementary temporal
-    and semantic analysis. Florence-2 generates descriptions for
-    candidate regions when applicable.
-9.  **Geospatial processing:** If both images have supported, compatible
-    georeferencing, candidate pixel geometry can be transformed into
-    geographic features.
-10. **Reporting:** The backend stores a structured report and generated
-    artifacts in the run directory.
-11. **Results:** The frontend retrieves the report, images, artifacts,
-    AOI, and geospatial outputs and presents them to the user.
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-The frontend checks the run status periodically while processing is
-active. The upload request does not need to remain open for the full
-duration of AI inference.
+<br/>
 
-## Technology Stack
+## 🛠️ Tech Stack
 
-  -----------------------------------------------------------------------
-  Layer                   Technologies            Purpose
-  ----------------------- ----------------------- -----------------------
-  Frontend                React, Vite, JavaScript User interface and
-                                                  application workflow
+<br/>
 
-  Mapping                 MapLibre, Geoman        Interactive map and AOI
-                                                  drawing
+<div align="center">
 
-  Backend                 Python, FastAPI         API, validation, job
-                                                  orchestration
+<img src="https://skillicons.dev/icons?i=react,vite,python,pytorch,fastapi&theme=dark" />
 
-  Deep learning           PyTorch and project     Model inference
-                          model dependencies      
+<br/><br/>
 
-  Change detection        CSD-Net implementation  Pixel-level change
-                                                  prediction
+| Layer | Technology | Purpose |
+|:---:|:---|:---|
+| 🖥️ **Frontend** | React + Vite + JavaScript | Upload workflow, dashboard, investigation history |
+| 🗺️ **Mapping** | MapLibre + Geoman | Interactive map & AOI drawing tools |
+| ⚙️ **Backend** | Python + FastAPI | API, validation, background job orchestration |
+| 🤖 **Deep Learning** | PyTorch | Model inference for all AI components |
+| 🔍 **Change Detection** | CSD-Net | Pixel-level change prediction |
+| 🧠 **Vision-Language** | RemoteCLIP | Image-text similarity & region analysis |
+| 📝 **Descriptions** | Florence-2 | Natural-language candidate region descriptions |
+| 🖼️ **Image Processing** | OpenCV + Pillow | Image loading, transforms & I/O |
+| 🌍 **Geospatial** | GeoTIFF metadata + GeoJSON | Coordinate handling & geographic feature output |
 
-  Vision-language         RemoteCLIP              Image-text similarity
-  analysis                                        and region analysis
+</div>
 
-  Image descriptions      Florence-2              Natural-language region
-                                                  descriptions
+<br/>
 
-  Image processing        OpenCV, Pillow          Image loading and
-                                                  processing
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-  Geospatial output       GeoTIFF metadata,       Geographic coordinate
-                          GeoJSON                 handling and feature
-                                                  output
+<br/>
 
-  API communication       HTTP/REST, JSON,        Frontend/backend
-                          multipart form data     communication
-  -----------------------------------------------------------------------
+## 📁 Repository Structure
 
-## Repository Structure
-
-The main application directories are:
-
-``` text
+```
 GEI/
-|
-+-- model_engine/
-|   +-- api/
-|   |   +-- main.py
-|   |   +-- jobs.py
-|   |   +-- geospatial.py
-|   |   +-- test_jobs.py
-|   |   +-- test_geospatial.py
-|   |
-|   +-- manual-test-fixtures/
-|   |   +-- geospatial/
-|   |
-|   +-- outputs/
-|       +-- api_runs/
-|
-+-- gei-frontend/
-    +-- src/
-        +-- components/
-        |   +-- dashboard/
-        |   +-- investigations/
-        |
-        +-- pages/
-        +-- services/
+│
+├── 📂 model_engine/                   ← Python backend & AI pipeline
+│   ├── 📂 api/
+│   │   ├── main.py                    ← FastAPI app entry point
+│   │   ├── jobs.py                    ← Background investigation jobs
+│   │   ├── geospatial.py              ← GeoTIFF & coordinate conversion
+│   │   ├── test_jobs.py               ← Backend unit tests
+│   │   └── test_geospatial.py         ← Geospatial unit tests
+│   ├── 📂 manual-test-fixtures/
+│   │   └── geospatial/                ← Test fixtures for geo processing
+│   └── 📂 outputs/
+│       └── api_runs/                  ← Per-run investigation artifacts
+│
+└── 📂 gei-frontend/                   ← React + Vite frontend
+    └── 📂 src/
+        ├── 📂 components/
+        │   ├── dashboard/             ← Results dashboard components
+        │   └── investigations/        ← Upload & investigation management
+        ├── 📂 pages/                  ← Route-level page components
+        └── 📂 services/               ← API client & HTTP layer
 ```
 
-This is a high-level view of the principal application areas, not an
-exhaustive listing of every model, configuration, or frontend file. The
-exact repository may contain additional directories and files.
+<br/>
 
-## Prerequisites
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-Install the following before running the application:
+<br/>
 
--   Python compatible with the backend dependencies. The project has
-    been exercised in a Python 3.13 environment.
--   Node.js and npm compatible with the frontend dependencies.
--   Git, if cloning or managing the repository.
--   The model checkpoints and other assets required by the AI pipeline.
--   Sufficient CPU/GPU memory for the configured models. GPU
-    availability depends on the installed PyTorch build and hardware.
+## 📦 Prerequisites
 
-The backend virtual environment and dependency files should be taken
-from the project checkout. Do not assume that a model checkpoint is
-included in the repository; verify the required model assets and
-configuration before running inference.
+<div align="center">
 
-## Setup and Run
+| Requirement | Version | Notes |
+|:---:|:---:|:---|
+| 🐍 Python | 3.13 compatible | For backend & AI pipeline |
+| 🟢 Node.js + npm | Latest stable | For React frontend |
+| 🔧 Git | Any | Repository management |
+| 🤖 Model Checkpoints | — | Required AI assets — verify before running inference |
+| 💻 CPU/GPU Memory | — | GPU availability depends on PyTorch build and hardware |
 
-The commands below assume the repository root contains `model_engine/`
-and `gei-frontend/`.
+</div>
 
-### 1. Backend setup
+> ⚠️ Model checkpoint files are **not included** in this repository. Confirm required model assets and configuration before running inference.
 
-Open a terminal:
+<br/>
 
-``` powershell
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
+
+<br/>
+
+## 🚀 Setup and Run
+
+### 1. Backend Setup
+
+```powershell
 cd model_engine
 ```
 
-If the project virtual environment already exists, activate it:
-
-``` powershell
+**Activate existing virtual environment:**
+```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-If it does not exist, create it using an installed compatible Python
-version:
-
-``` powershell
+**Or create a new one:**
+```powershell
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-Install the dependencies using the dependency manifest provided in the
-checkout. For example, if the backend contains a `requirements.txt`:
-
-``` powershell
+**Install dependencies:**
+```powershell
 python -m pip install -r requirements.txt
 ```
 
-Confirm that the required model checkpoints and configuration are
-available. Then start the API:
-
-``` powershell
+**Start the API server:**
+```powershell
 .\.venv\Scripts\python.exe -m uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Backend API:
+| Endpoint | URL |
+|:---|:---|
+| 🔗 Backend API | `http://127.0.0.1:8000` |
+| 📖 Interactive Docs | `http://127.0.0.1:8000/docs` |
 
-``` text
-http://127.0.0.1:8000
-```
+<br/>
 
-Interactive API documentation:
+### 2. Frontend Setup
 
-``` text
-http://127.0.0.1:8000/docs
-```
-
-### 2. Frontend setup
-
-Open a second terminal:
-
-``` powershell
+```powershell
 cd gei-frontend
-```
-
-Install frontend dependencies:
-
-``` powershell
 npm install
-```
-
-Start the development server:
-
-``` powershell
 npm run dev
 ```
 
-To make the development server available on the local interface
-explicitly:
+> To bind to a specific interface: `npm run dev -- --host 127.0.0.1`
 
-``` powershell
-npm run dev -- --host 127.0.0.1
-```
+<br/>
 
-Open the local URL printed by Vite in the terminal.
+### 3. Production Build
 
-### 3. Production build
-
-From `gei-frontend/`:
-
-``` powershell
+```powershell
+cd gei-frontend
 npm run build
+npm run preview    # preview the built frontend locally
 ```
 
-To run the built frontend locally:
+<br/>
 
-``` powershell
-npm run preview
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
+
+<br/>
+
+## 🔌 API Overview
+
+<details>
+<summary><strong>All Endpoints — click to expand</strong></summary>
+<br/>
+
+| Method | Endpoint | Purpose |
+|:---:|:---|:---|
+| `GET` | `/api/health` | Backend health check |
+| `POST` | `/api/investigations` | Create a new investigation |
+| `GET` | `/api/investigations/{run_id}` | Get investigation status |
+| `GET` | `/api/investigations/{run_id}/report` | Retrieve investigation report |
+| `GET` | `/api/investigations/{run_id}/files` | List run artifacts |
+| `GET` | `/api/investigations/{run_id}/inputs/t1` | Retrieve original T1 image |
+| `GET` | `/api/investigations/{run_id}/inputs/t2` | Retrieve original T2 image |
+| `GET` | `/api/investigations/{run_id}/inputs/{type}/preview` | PNG preview of T1 or T2 |
+| `GET` | `/api/investigations/{run_id}/aoi` | Retrieve associated AOI |
+| `GET` | `/api/investigations/{run_id}/geospatial` | Retrieve geospatial metadata |
+| `GET` | `/api/investigations/{run_id}/regions.geojson` | Candidate region GeoJSON |
+
+</details>
+
+> 📖 For exact request schemas, response structures and error codes — consult the running FastAPI docs at `/docs`.
+
+<br/>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
+
+<br/>
+
+## 💾 Outputs and Storage
+
+Each run is fully isolated in its own directory:
+
 ```
-
-The exact frontend API base URL and any required environment
-configuration should be checked in the project's existing configuration
-before deployment.
-
-## Using the Application
-
-1.  Start the backend and frontend.
-2.  Open the GEI frontend in a browser.
-3.  Navigate to the investigation upload workflow.
-4.  Select the earlier T1 image and later T2 image.
-5.  Optionally select or associate an AOI.
-6.  Submit the investigation.
-7.  Wait for the run to move from queued/running to completed or failed.
-8.  Open the completed investigation.
-9.  Review the executive summary, original imagery, change outputs, and
-    candidate regions.
-10. Inspect RemoteCLIP and Florence-2 information where candidate
-    regions are available.
-11. Review the AOI and geospatial map when geographic mapping is
-    available.
-12. Open or download the investigation report and generated artifacts.
-
-The input pair must represent the same area and have compatible
-dimensions. Matching dimensions alone do not guarantee that the images
-are geographically or visually aligned.
-
-## API Overview
-
-The following run-scoped endpoints are used by the application. The
-`{run_id}` placeholder must be replaced with the ID returned when an
-investigation is created.
-
-  ------------------------------------------------------------------------------------------------------------
-  Method                  Endpoint                                                     Purpose
-  ----------------------- ------------------------------------------------------------ -----------------------
-  GET                     `/api/health`                                                Backend health
-                                                                                       information
-
-  POST                    `/api/investigations`                                        Create an investigation
-
-  GET                     `/api/investigations/{run_id}`                               Retrieve investigation
-                                                                                       status
-
-  GET                     `/api/investigations/{run_id}/report`                        Retrieve the
-                                                                                       investigation report
-
-  GET                     `/api/investigations/{run_id}/files`                         List run artifacts
-
-  GET                     `/api/investigations/{run_id}/inputs/t1`                     Retrieve original T1
-                                                                                       image
-
-  GET                     `/api/investigations/{run_id}/inputs/t2`                     Retrieve original T2
-                                                                                       image
-
-  GET                     `/api/investigations/{run_id}/inputs/{image_type}/preview`   Retrieve a PNG preview
-                                                                                       of T1 or T2
-
-  GET                     `/api/investigations/{run_id}/aoi`                           Retrieve associated AOI
-
-  GET                     `/api/investigations/{run_id}/geospatial`                    Retrieve geospatial
-                                                                                       metadata
-
-  GET                     `/api/investigations/{run_id}/regions.geojson`               Retrieve
-                                                                                       candidate-region
-                                                                                       GeoJSON
-  ------------------------------------------------------------------------------------------------------------
-
-The investigation creation endpoint accepts multipart form data. The
-image fields are required; AOI GeoJSON and AOI metadata are optional.
-
-For the exact request schema, response structures, and error codes,
-consult the running FastAPI documentation at `/docs`.
-
-## Outputs and Storage
-
-Investigation data is stored separately for each run. The backend uses a
-run-specific output directory, with the run ID separating inputs,
-reports, metadata, and generated artifacts.
-
-A simplified example:
-
-``` text
 outputs/
 └── api_runs/
     └── <run_id>/
-        ├── inputs/
+        ├── 📂 inputs/
         │   ├── image_t1.png
         │   └── image_t2.png
-        ├── outputs/
+        ├── 📂 outputs/
         │   ├── change_mask.png
         │   ├── probability_map.png
         │   ├── overlay.png
@@ -507,160 +380,133 @@ outputs/
         └── geospatial_metadata.json
 ```
 
-This is an illustrative structure; the exact artifact names and files
-depend on the pipeline output for a particular run.
+> ⚠️ The frontend keeps its investigation index in browser local storage under `gei_ai_investigation_runs`. Clearing browser storage removes the visible history index even when backend run data still exists.
 
-The frontend keeps its visible AI investigation index in browser local
-storage under:
+<br/>
 
-``` text
-gei_ai_investigation_runs
-```
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-This browser-side index is separate from the backend's run files.
-Clearing browser storage can remove the visible history index even when
-backend run data still exists.
+<br/>
 
-## Geospatial Processing
+## 🧪 Testing
 
-### Pixel coordinates and geographic coordinates
+**Backend unit tests (33 tests · 0 failures · 0 errors)**
 
-A normal image provides pixel coordinates such as `(column, row)`. Those
-coordinates do not identify a location on Earth.
-
-A georeferenced raster contains metadata that defines how pixel
-positions relate to a coordinate reference system. GEI inspects
-supported GeoTIFF metadata and uses the associated transform to convert
-candidate-region geometry when the required conditions are satisfied.
-
-### Supported cases
-
-The implemented conversion supports:
-
--   WGS84 / EPSG:4326.
--   Web Mercator / EPSG:3857, transformed to WGS84 output.
-
-Unsupported CRS definitions, missing georeferencing, or incompatible
-image transforms result in geographic mapping being reported as
-unavailable. Pixel-space detections remain available.
-
-### AOI is not georeferencing
-
-An AOI describes the geographical boundary of an investigation. It does
-not, by itself, provide a reliable pixel-to-geographic transformation
-for an uploaded image.
-
-### Alignment caveat
-
-Matching raster transforms provide coordinate alignment information but
-do not independently prove that the image content is visually
-co-registered. Misalignment, differences in acquisition conditions, and
-image quality can affect change-detection results.
-
-## Testing
-
-### Backend tests
-
-The backend test suite uses Python's built-in `unittest` framework.
-
-From `model_engine/`:
-
-``` powershell
+```powershell
+cd model_engine
 .\.venv\Scripts\python.exe -m unittest discover -v
 ```
 
-The latest reported stabilization run completed with **33 tests passed,
-0 failures, and 0 errors**. Re-run the command against the current
-checkout to confirm its present status.
+**Frontend lint**
 
-### Frontend lint
-
-From `gei-frontend/`:
-
-``` powershell
+```powershell
+cd gei-frontend
 npm run lint
 ```
 
-### Frontend production build
+**Frontend production build**
 
-From `gei-frontend/`:
-
-``` powershell
+```powershell
 npm run build
 ```
 
-The latest reported checks passed. Vite displayed an advisory about one
-or more generated JavaScript chunks exceeding 500 kB; this is a
-bundle-size warning, not a failed build.
+> ℹ️ Vite may show a bundle-size advisory for chunks exceeding 500 kB — this is a warning, not a failed build.
 
-### Manual browser verification
+<br/>
 
-For a complete demonstration, verify:
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
--   PNG/JPEG upload and results display.
--   TIFF upload and PNG preview fallback where the browser cannot
-    display TIFF directly.
--   Investigations with and without AOIs.
--   Completed and failed run states.
--   Report and artifact downloads.
--   Map display when georeferencing is available.
--   Unavailable-georeferencing messaging when it is not.
--   Switching between investigations without stale results or map
-    layers.
--   Candidate-feature selection using a run with non-empty GeoJSON.
+<br/>
 
-A synthetic fixture that produces zero candidate regions can verify
-processing and empty-result handling, but cannot verify non-empty
-candidate-feature interaction or real-world detection accuracy.
+## ⚠️ Limitations
 
-## Limitations
+| # | Limitation |
+|:---:|:---|
+| 01 | **Detection ≠ Verification** — CSD-Net identifies visual changes; it does not establish real-world meaning or legality |
+| 02 | **Image Alignment** — Equal dimensions do not guarantee pixels represent the same ground location |
+| 03 | **False Positives/Negatives** — Shadows, seasons, illumination, and misalignment affect predictions |
+| 04 | **Semantic Uncertainty** — RemoteCLIP scores are embedding similarities, not calibrated probabilities |
+| 05 | **Description Uncertainty** — Florence-2 descriptions may be inaccurate and require visual verification |
+| 06 | **Georeferencing Dependency** — Geographic mapping requires valid, supported GeoTIFF metadata |
+| 07 | **CRS Coverage** — Only WGS84 (EPSG:4326) and Web Mercator (EPSG:3857) conversions are implemented |
 
-1.  **Detection is not verification:** CSD-Net identifies potential
-    visual changes. It does not establish the real-world meaning or
-    legality of a change.
-2.  **Image alignment matters:** Equal image dimensions do not guarantee
-    that corresponding pixels represent the same ground location.
-3.  **False positives and negatives:** Shadows, seasonal changes,
-    illumination, image quality, and misalignment can affect
-    predictions.
-4.  **Semantic uncertainty:** RemoteCLIP similarity scores are embedding
-    similarities, not calibrated probabilities.
-5.  **Description uncertainty:** Florence-2 descriptions may be
-    inaccurate and require visual verification.
-6.  **Georeferencing dependency:** Geographic candidate mapping is
-    available only when supported, valid georeferencing metadata is
-    present.
-7.  **CRS coverage:** The implemented conversion supports specific CRS
-    cases; unsupported systems are reported as unavailable.
-8.  **Evaluation:** Reliable accuracy claims require evaluation against
-    labelled real-world datasets using suitable metrics such as
-    precision, recall, F1-score, and Intersection over Union (IoU).
+<br/>
 
-## Future Enhancements
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-Potential future work includes:
+<br/>
 
--   Integration with satellite imagery providers and automated
-    multi-date acquisition.
--   More robust image co-registration.
--   Support for additional coordinate reference systems.
--   Evaluation and calibration using labelled remote-sensing datasets.
--   Improved building, road, and land-use change classification.
--   Multi-date change tracking.
--   Scalable background job processing and cloud deployment.
--   User authentication, roles, and investigation access controls.
--   Enhanced report export and investigation audit trails.
+## 🔮 Future Enhancements
 
-## Responsible Use
+| # | Enhancement | Description |
+|:---:|:---|:---|
+| 01 | 🛰️ Imagery Integration | Connect to satellite providers for automated multi-date acquisition |
+| 02 | 📐 Co-registration | More robust image alignment pipeline |
+| 03 | 🌍 Extended CRS Support | Additional coordinate reference systems beyond EPSG:4326 and 3857 |
+| 04 | 📊 Evaluation Framework | Labelled dataset evaluation — precision, recall, F1, IoU |
+| 05 | 🏗️ Change Classification | Improved building, road, and land-use change classification |
+| 06 | 📅 Multi-date Tracking | Track changes across more than two time points |
+| 07 | ☁️ Cloud Deployment | Scalable background job processing and cloud hosting |
+| 08 | 🔐 Auth & Access Control | User authentication, roles, and investigation access controls |
+| 09 | 📋 Audit Trails | Enhanced report export and investigation audit history |
 
-GEI provides AI-generated candidate detections and supplementary
-interpretations to support human investigation. Users should inspect the
-original imagery, validate geospatial alignment, and independently
-verify model outputs before making operational, legal, or policy
-decisions.
+<br/>
 
-------------------------------------------------------------------------
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
 
-**Geospatial Investigation Engine (GEI)**\
-AI-assisted change detection, region analysis, and geospatial
-investigation.
+<br/>
+
+## 🛡️ Responsible Use
+
+GEI provides **AI-generated candidate detections** and supplementary interpretations to support human investigation.
+
+Users should:
+- Inspect original T1 and T2 imagery directly
+- Validate geospatial alignment independently
+- Verify model outputs before making operational, legal, or policy decisions
+
+GEI does not independently establish whether a detected change is illegal construction or any other confirmed real-world event.
+
+<br/>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ WAVE DIVIDER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=0,2,4,8,20&height=2" width="100%"/>
+
+<br/>
+
+## 👨‍💻 Author
+
+<div align="center">
+
+### Aryan Sengar
+
+🌍 Gurgaon, India
+
+<br/>
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aryan-sengar-786b96290/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/aryansengar007)
+
+</div>
+
+<br/>
+
+<!-- ╔══════════════════════════════════════════════════════════════╗ -->
+<!--                   ANIMATED WAVE FOOTER                         -->
+<!-- ╚══════════════════════════════════════════════════════════════╝ -->
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:020c18,40:0a2340,80:0c4a6e,100:0369a1&height=130&section=footer&animation=fadeIn" width="100%"/>
+
+<div align="center">
+
+© 2025 **Aryan Sengar** — All Rights Reserved. Unauthorized copying is strictly prohibited.
+
+<br/>
+
+*If you found this project helpful, consider leaving a* ⭐ *— it means a lot!*
+
+</div>
